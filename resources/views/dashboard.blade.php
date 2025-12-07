@@ -117,13 +117,19 @@
         <main>
             <!-- input Kode Barang, nama barang, harga, jumlah -->
             <form action="" method="post">
-
+                @php
+                    $data_barang = session("data_barang") ?? [];
+                @endphp
                 <label for="list_barang">Kode Barang</label>
                 <select name="list_barang" id="list_barang">
                     <option disabled selected>-- Pilih Kode Barang --</option>
-                    <option value="kode">
-                         Kode | Nama barang
+
+                    @foreach ($data_barang as $kode => $item)
+                    <option value="{{ $kode }}">
+                         {{ $kode }} | {{ $item["nama"] }}
                     </option>
+                    @endforeach
+
                 </select>
 
                 <label for="kode_barang">Kode Barang</label>
@@ -180,6 +186,20 @@
     </body>
    
     <script>
+        const selectBarang =  document.getElementById("list_barang");
+        const inputKodeBarang = document.getElementById("kode_barang");
+        const inputNamaBarang = document.getElementById("nama_barang");
+        const inputHargaBarang = document.getElementById("harga_barang");
+        const inputJumlahBarang = document.getElementById("jumlah");
+
+        let daftarBarang = @json(session("data_barang", []));
+
+        selectBarang.addEventListener("change", function(){
+            inputKodeBarang.value = selectBarang.value;
+            inputNamaBarang.value = daftarBarang[selectBarang.value]["nama"];
+            inputHargaBarang.value = daftarBarang[selectBarang.value]["harga"];
+            return
+        });
 
     </script>
 
