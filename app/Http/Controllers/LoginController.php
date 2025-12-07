@@ -11,7 +11,7 @@ class LoginController extends Controller
     //
     public function index(){
         if (!session("username")) {
-            return redirect()->route("login.index");
+            return view("login");
         }
         return "Anda sudah login sebagai ".session("username");
     }
