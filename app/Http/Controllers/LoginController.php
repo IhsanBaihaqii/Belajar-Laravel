@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 use function Symfony\Component\String\s;
 
@@ -13,7 +14,7 @@ class LoginController extends Controller
         if (!session("username")) {
             return view("login");
         }
-        return "Anda sudah login sebagai ".session("username");
+        return Redirect()->route("dashboard.index");
     }
 
     public function proses(Request $request){
@@ -26,7 +27,7 @@ class LoginController extends Controller
                 "username" => $username,
                 "role" => "Dosen"
             ]);
-            return "Berhasil login!";
+            return Redirect()->route("dashboard.index");
         }
         return back()->with("error", "Username atau password salah!");
     }

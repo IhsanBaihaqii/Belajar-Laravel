@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -14,3 +15,7 @@ Route::post('/login', [LoginController::class, "proses"])->name("login.proses");
 
 // Fungsi Logout
 Route::get('/logout', [LogoutController::class, "index"])->name("logout.index");
+
+// Dashboard
+Route::get('/dashboard', [DashboardController::class, "index"])->name("dashboard.index");
+
