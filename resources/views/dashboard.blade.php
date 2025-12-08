@@ -117,14 +117,11 @@
         <main>
             <!-- input Kode Barang, nama barang, harga, jumlah -->
             <form action="" method="post">
-                @php
-                    $data_barang = session("data_barang") ?? [];
-                @endphp
                 <label for="list_barang">Kode Barang</label>
                 <select name="list_barang" id="list_barang">
                     <option disabled selected>-- Pilih Kode Barang --</option>
 
-                    @foreach ($data_barang as $kode => $item)
+                    @foreach ($list_barang as $kode => $item)
                     <option value="{{ $kode }}">
                          {{ $kode }} | {{ $item["nama"] }}
                     </option>
@@ -156,26 +153,56 @@
                 <th>Total (Rp)</th>
                 <th>Action</th>
             </tr>
-            <tr>
-                <td>kode_barang</td>
-                <td>nama_barang</td>
-                <td style='text-align:right;'>harga</td>
-                <td style='text-align:center;'>jumlah</td>
-                <td style='text-align:right;'>total_harga</td>
-                <td style='text-align:center;'> <form method='post'><button type='submit' name='hapus' value=$kode_barang>Hapus</button></form> </td>
-            </tr>
+            @php
+                $data_barang = session("data_barang") ?? [];
+                $grandtotal = 0;
+            @endphp
+            @foreach ($data_barang as $kode => $item)
+                @php
+                    // hitung total
+                    $total_harga = $item["harga"] * $item["jumlah"];
+                    $grandtotal += $total_harga;
+
+                    // hitung diskon
+                    if ($grandtotal == 0) {
+                        $d = "0%";
+                        $diskon = 0;
+                    } elseif ($grandtotal < 50000) {
+                        $d = "5%";
+                        $diskon = 0.05 * $grandtotal;
+                    } elseif ($grandtotal <= 100000) {
+                        $d = "10%";
+                        $diskon = 0.10 * $grandtotal;
+                    } else {
+                        $d = "15%";
+                        $diskon = 0.15 * $grandtotal;
+                    }
+                    $totalbayar = $grandtotal - $diskon;
+
+                @endphp
+                <tr>
+                    <td>{{ $kode }}</td>
+                    <td>{{ $item["nama"] }}</td>
+                    <td style='text-align:right;'>Rp {{ number_format($item["harga"],  0, ',', '.'); }}</td>
+                    <td style='text-align:center;'>{{ $item["jumlah"] }}</td>
+                    <td style='text-align:right;'>Rp {{ number_format($total_harga,  0, ',', '.'); }}</td>
+                    <td style='text-align:center;'> <form method='post'><button type='submit' name='hapus' value="{{ $kode }}">Hapus</button></form> </td>
+                </tr>
+            @endforeach
+
+
             <!-- Total Belanja, Diskon, Total Bayar -->
             <tr>
                 <td colspan="4" style="text-align:right; padding-right:20px"><strong>Total Belanja</strong></td>
-                <td style="text-align:right;"><strong>grandtotal</strong></td>
+                <td style="text-align:right;"><strong>Rp {{ number_format($grandtotal,  0, ',', '.'); }}</strong></td>
             </tr>
             <tr>
-                <td colspan="4" style="text-align:right; padding-right:20px"><strong>Diskon ?%</strong></td>
-                <td style="text-align:right;"><strong>diskon</strong></td>
+                <td colspan="4" style="text-align:right; padding-right:20px"><strong>Diskon {{ $d }}</strong></td>
+                <td style="text-align:right;"><strong>Rp {{ number_format($diskon,  0, ',', '.'); }}</strong></td>
             </tr>
             <tr>
                 <td colspan="4" style="text-align:right; padding-right:20px"><strong>Total Bayar</strong></td>
-                <td style="text-align:right;"><strong>totalbayar</strong></td>
+                <td style="text-align:right;"><strong>Rp {{ number_format($totalbayar,  0, ',', '.'); }}</strong></td>
             </tr>
             </table>
             <!-- Reset Keranjang -->
@@ -192,7 +219,7 @@
         const inputHargaBarang = document.getElementById("harga_barang");
         const inputJumlahBarang = document.getElementById("jumlah");
 
-        let daftarBarang = @json(session("data_barang", []));
+        let daftarBarang = @json($list_barang) ?? [];
 
         selectBarang.addEventListener("change", function(){
             inputKodeBarang.value = selectBarang.value;
