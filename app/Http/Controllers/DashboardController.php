@@ -29,22 +29,49 @@ class DashboardController extends Controller
                 ],
             ];
             // data barang
-            session([
-                "data_barang" => [
-                    "BRG001" => [
-                        "nama" => "Handuk",
-                        "harga" => 4500,
-                        "jumlah" => 3
-                    ],
-                    "BRG002" => [
-                        "nama" => "Lampu",
-                        "harga" => 3000,
-                        "jumlah" => 2
-                    ],
-                ]
-            ]);
+            // Check apakah ada sesi data_barang
+            if (!session("data_barang")){
+                session([
+                    "data_barang" => [
+                        "BRG001" => [
+                            "nama" => "Handuk",
+                            "harga" => 4500,
+                            "jumlah" => 3
+                        ],
+                        "BRG002" => [
+                            "nama" => "Lampu",
+                            "harga" => 3000,
+                            "jumlah" => 2
+                        ],
+                    ]
+                ]);
+            }
             return view("dashboard", compact("list_barang"));
         }
         return back()->with("error", "Silahkan login terlebih dahulu");
+    }
+
+    // Larang akses get ke "dashboard/barang"
+    public function denied(){
+        return back();
+    }
+    
+    // Tambah Barang
+    public function tambahBarang(Request $request){
+        $action = $request->action;
+        if ($action == "add"){
+            $data_barang = session("data_barang", []);
+            if ($data_barang[$request->kode_barang] ?? false) {
+                $data_barang[$request->kode_barang]["jumlah"] += $request->jumlah;
+            } else {
+                $data_barang[$request->kode_barang] = [
+                    "nama" => $request->nama_barang,
+                    "harga" => $request->harga_barang,
+                    "jumlah" => $request->jumlah
+                ];
+            }
+            session(["data_barang" => $data_barang]);
+            return Redirect()->route("dashboard.index");
+        }
     }
 }

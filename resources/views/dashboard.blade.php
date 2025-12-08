@@ -37,7 +37,7 @@
             background-color: #0056b3;
         }
 
-         main{
+        main{
             background-color: white;
             padding: 20px;
             border-radius: 5px;
@@ -69,7 +69,7 @@
         .container {
             display: flex;
         }
-        input[type="submit"], input[type="reset"] {
+        button {
             width: 40%;
             padding: 10px;
             margin: 10px 1%;
@@ -79,14 +79,18 @@
             color: white;
             cursor: pointer;
         }
-        input[type="reset"] {
+        button[type="reset"] {
             background-color: white;
             color: #333;
             border: 1px solid #ccc;
         }
+        button[name="hapus"] {
+            background-color: red;
+            color: white    ;
+            border: 1px solid #ccc;
+        }
 
-
-       table {
+        table {
             width: 100%;
             border-collapse: collapse;
         }
@@ -96,8 +100,7 @@
         th, td {
             padding: 10px;
             text-align: left;
-       }
-       
+        }
         </style>
     </head>
 
@@ -116,7 +119,8 @@
 
         <main>
             <!-- input Kode Barang, nama barang, harga, jumlah -->
-            <form action="" method="post">
+            <form action="{{ route("dashboard.barang.add") }}" method="post">
+                @csrf
                 <label for="list_barang">Kode Barang</label>
                 <select name="list_barang" id="list_barang">
                     <option disabled selected>-- Pilih Kode Barang --</option>
@@ -138,8 +142,8 @@
                 <label for="jumlah">Jumlah</label>
                 <input type="number" name="jumlah" id="jumlah" placeholder="Masukkan Jumlah" required><br>
                 <div class="container">
-                    <input type="submit" value="Tambahkan" name="tambah_barang">
-                    <input type="reset" value="Batal">
+                    <button type="submit" value="add" name="action"> Tambah </button>
+                    <button type="reset" value="Batal">Batal</button>
                 </div>
             </form>
             <h2>Daftar Barang</h2>
@@ -207,7 +211,7 @@
             </table>
             <!-- Reset Keranjang -->
             <form action="dashboard.php" method="get" style="margin-top:20px;">
-                <input type="submit" value="Reset Keranjang" name="reset">
+                <button type="submit" value="reset" name="reset">Reset Keranjang</button>
             </form>
         </main>
     </body>
