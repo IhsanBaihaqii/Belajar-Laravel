@@ -60,6 +60,8 @@ class DashboardController extends Controller
     public function aksi(Request $request){
         if ($request->add) {
             $this->tambahBarang($request);
+        } elseif ($request->delete) {
+            $this->hapusBarang($request);
         }
         return Redirect()->route("dashboard.index");
     }
@@ -77,6 +79,13 @@ class DashboardController extends Controller
                 "jumlah" => $request->jumlah
             ];
         }
+        session(["data_barang" => $data_barang]);
+    }
+
+    // Hapus Barang
+    protected function hapusBarang(Request $request){
+        $data_barang = session("data_barang", []);
+        unset($data_barang[$request->delete]);
         session(["data_barang" => $data_barang]);
     }
 }

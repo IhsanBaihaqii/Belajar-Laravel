@@ -190,7 +190,7 @@
                     <td style='text-align:right;'>Rp {{ number_format($item["harga"],  0, ',', '.'); }}</td>
                     <td style='text-align:center;'>{{ $item["jumlah"] }}</td>
                     <td style='text-align:right;'>Rp {{ number_format($total_harga,  0, ',', '.'); }}</td>
-                    <td style='text-align:center;'> <form method='post'><button type='submit' name='hapus' value="{{ $kode }}">Hapus</button></form> </td>
+                    <td style='text-align:center;'> <form method='post' action='{{ route("dashboard.barang.aksi") }}'> @csrf <button type='submit' name='delete' value="{{ $kode }}">Hapus</button></form> </td>
                 </tr>
             @endforeach
 
