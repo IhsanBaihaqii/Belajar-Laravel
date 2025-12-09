@@ -56,22 +56,27 @@ class DashboardController extends Controller
         return back();
     }
     
-    // Tambah Barang
-    public function tambahBarang(Request $request){
-        $action = $request->action;
-        if ($action == "add"){
-            $data_barang = session("data_barang", []);
-            if ($data_barang[$request->kode_barang] ?? false) {
-                $data_barang[$request->kode_barang]["jumlah"] += $request->jumlah;
-            } else {
-                $data_barang[$request->kode_barang] = [
-                    "nama" => $request->nama_barang,
-                    "harga" => $request->harga_barang,
-                    "jumlah" => $request->jumlah
-                ];
-            }
-            session(["data_barang" => $data_barang]);
-            return Redirect()->route("dashboard.index");
+    // Check aksi
+    public function aksi(Request $request){
+        if ($request->add) {
+            $this->tambahBarang($request);
         }
+        return Redirect()->route("dashboard.index");
+    }
+
+    // Tambah Barang
+    protected function tambahBarang(Request $request) {
+        $data_barang = session("data_barang", []);
+        // Check apakah barang sudah ada
+        if ($data_barang[$request->kode_barang] ?? false) {
+            $data_barang[$request->kode_barang]["jumlah"] += $request->jumlah;
+        } else {
+            $data_barang[$request->kode_barang] = [
+                "nama" => $request->nama_barang,
+                "harga" => $request->harga_barang,
+                "jumlah" => $request->jumlah
+            ];
+        }
+        session(["data_barang" => $data_barang]);
     }
 }

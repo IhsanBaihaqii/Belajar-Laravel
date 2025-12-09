@@ -119,7 +119,7 @@
 
         <main>
             <!-- input Kode Barang, nama barang, harga, jumlah -->
-            <form action="{{ route("dashboard.barang.add") }}" method="post">
+            <form action="{{ route("dashboard.barang.aksi") }}" method="post">
                 @csrf
                 <label for="list_barang">Kode Barang</label>
                 <select name="list_barang" id="list_barang">
@@ -142,7 +142,7 @@
                 <label for="jumlah">Jumlah</label>
                 <input type="number" name="jumlah" id="jumlah" placeholder="Masukkan Jumlah" required><br>
                 <div class="container">
-                    <button type="submit" value="add" name="action"> Tambah </button>
+                    <button type="submit" value="add" name="add"> Tambah </button>
                     <button type="reset" value="Batal">Batal</button>
                 </div>
             </form>

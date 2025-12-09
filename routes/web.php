@@ -21,5 +21,5 @@ Route::get('/dashboard', [DashboardController::class, "index"])->name("dashboard
 
 // Kontrol barang dari Dashboard
 Route::get('/dashboard/barang', [DashboardController::class, "denied"])->name("dashboard.barang.denied");
-Route::post('/dashboard/barang', [DashboardController::class, "tambahBarang"])->name("dashboard.barang.add");
+Route::post('/dashboard/barang', [DashboardController::class, "aksi"])->name("dashboard.barang.aksi");
 
