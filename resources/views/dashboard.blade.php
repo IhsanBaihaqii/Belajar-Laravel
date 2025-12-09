@@ -21,7 +21,7 @@
         .container2 {
             border-radius: 5px;
         }
-        h2 {
+        h2, h3 {
             color: #333;
         }
         a {
@@ -148,71 +148,76 @@
             </form>
             <h2>Daftar Barang</h2>
             <p>Menampilkan barang yang di input</p>
-            <table border="1" cellpadding="10" cellspacing="0">
-            <tr>
-                <th>Kode Barang</th>
-                <th>Nama Barang</th>
-                <th>Harga Barang (Rp)</th>
-                <th>Jumlah</th>
-                <th>Total (Rp)</th>
-                <th>Action</th>
-            </tr>
             @php
                 $data_barang = session("data_barang") ?? [];
                 $grandtotal = 0;
             @endphp
-            @foreach ($data_barang as $kode => $item)
-                @php
-                    // hitung total
-                    $total_harga = $item["harga"] * $item["jumlah"];
-                    $grandtotal += $total_harga;
 
-                    // hitung diskon
-                    if ($grandtotal == 0) {
-                        $d = "0%";
-                        $diskon = 0;
-                    } elseif ($grandtotal < 50000) {
-                        $d = "5%";
-                        $diskon = 0.05 * $grandtotal;
-                    } elseif ($grandtotal <= 100000) {
-                        $d = "10%";
-                        $diskon = 0.10 * $grandtotal;
-                    } else {
-                        $d = "15%";
-                        $diskon = 0.15 * $grandtotal;
-                    }
-                    $totalbayar = $grandtotal - $diskon;
-
-                @endphp
+            @if (session("data_barang"))
+                <table border="1" cellpadding="10" cellspacing="0">
                 <tr>
-                    <td>{{ $kode }}</td>
-                    <td>{{ $item["nama"] }}</td>
-                    <td style='text-align:right;'>Rp {{ number_format($item["harga"],  0, ',', '.'); }}</td>
-                    <td style='text-align:center;'>{{ $item["jumlah"] }}</td>
-                    <td style='text-align:right;'>Rp {{ number_format($total_harga,  0, ',', '.'); }}</td>
-                    <td style='text-align:center;'> <form method='post' action='{{ route("dashboard.barang.aksi") }}'> @csrf <button type='submit' name='delete' value="{{ $kode }}">Hapus</button></form> </td>
+                    <th>Kode Barang</th>
+                    <th>Nama Barang</th>
+                    <th>Harga Barang (Rp)</th>
+                    <th>Jumlah</th>
+                    <th>Total (Rp)</th>
+                    <th>Action</th>
                 </tr>
-            @endforeach
+                @foreach ($data_barang as $kode => $item)
+                    @php
+                        // hitung total
+                        $total_harga = $item["harga"] * $item["jumlah"];
+                        $grandtotal += $total_harga;
 
+                        // hitung diskon
+                        if ($grandtotal == 0) {
+                            $d = "0%";
+                            $diskon = 0;
+                        } elseif ($grandtotal < 50000) {
+                            $d = "5%";
+                            $diskon = 0.05 * $grandtotal;
+                        } elseif ($grandtotal <= 100000) {
+                            $d = "10%";
+                            $diskon = 0.10 * $grandtotal;
+                        } else {
+                            $d = "15%";
+                            $diskon = 0.15 * $grandtotal;
+                        }
+                        $totalbayar = $grandtotal - $diskon;
 
-            <!-- Total Belanja, Diskon, Total Bayar -->
-            <tr>
-                <td colspan="4" style="text-align:right; padding-right:20px"><strong>Total Belanja</strong></td>
-                <td style="text-align:right;"><strong>Rp {{ number_format($grandtotal,  0, ',', '.'); }}</strong></td>
-            </tr>
-            <tr>
-                <td colspan="4" style="text-align:right; padding-right:20px"><strong>Diskon {{ $d }}</strong></td>
-                <td style="text-align:right;"><strong>Rp {{ number_format($diskon,  0, ',', '.'); }}</strong></td>
-            </tr>
-            <tr>
-                <td colspan="4" style="text-align:right; padding-right:20px"><strong>Total Bayar</strong></td>
-                <td style="text-align:right;"><strong>Rp {{ number_format($totalbayar,  0, ',', '.'); }}</strong></td>
-            </tr>
-            </table>
-            <!-- Reset Keranjang -->
-            <form action="dashboard.php" method="get" style="margin-top:20px;">
-                <button type="submit" value="reset" name="reset">Reset Keranjang</button>
-            </form>
+                    @endphp
+                    <tr>
+                        <td>{{ $kode }}</td>
+                        <td>{{ $item["nama"] }}</td>
+                        <td style='text-align:right;'>Rp {{ number_format($item["harga"],  0, ',', '.'); }}</td>
+                        <td style='text-align:center;'>{{ $item["jumlah"] }}</td>
+                        <td style='text-align:right;'>Rp {{ number_format($total_harga,  0, ',', '.'); }}</td>
+                        <td style='text-align:center;'> <form method='post' action='{{ route("dashboard.barang.aksi") }}'> @csrf <button type='submit' name='delete' value="{{ $kode }}">Hapus</button></form> </td>
+                    </tr>
+                @endforeach
+
+                <!-- Total Belanja, Diskon, Total Bayar -->
+                <tr>
+                    <td colspan="4" style="text-align:right; padding-right:20px"><strong>Total Belanja</strong></td>
+                    <td style="text-align:right;"><strong>Rp {{ number_format($grandtotal,  0, ',', '.'); }}</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align:right; padding-right:20px"><strong>Diskon {{ $d }}</strong></td>
+                    <td style="text-align:right;"><strong>Rp {{ number_format($diskon,  0, ',', '.'); }}</strong></td>
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align:right; padding-right:20px"><strong>Total Bayar</strong></td>
+                    <td style="text-align:right;"><strong>Rp {{ number_format($totalbayar,  0, ',', '.'); }}</strong></td>
+                </tr>
+                </table>
+                <!-- Reset Keranjang -->
+                <form action="dashboard.php" method="get" style="margin-top:20px;">
+                    <button type="submit" value="reset" name="reset">Reset Keranjang</button>
+                </form>
+            @else
+                <h3>Belum ada daftar barang</h3>
+            @endif
+
         </main>
     </body>
    

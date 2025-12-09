@@ -29,23 +29,7 @@ class DashboardController extends Controller
                 ],
             ];
             // data barang
-            // Check apakah ada sesi data_barang
-            if (!session("data_barang")){
-                session([
-                    "data_barang" => [
-                        "BRG001" => [
-                            "nama" => "Handuk",
-                            "harga" => 4500,
-                            "jumlah" => 3
-                        ],
-                        "BRG002" => [
-                            "nama" => "Lampu",
-                            "harga" => 3000,
-                            "jumlah" => 2
-                        ],
-                    ]
-                ]);
-            }
+            // session(["data_barang", []]);
             return view("dashboard", compact("list_barang"));
         }
         return back()->with("error", "Silahkan login terlebih dahulu");
