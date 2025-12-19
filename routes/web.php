@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BarangController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\DashboardController;
@@ -22,4 +23,7 @@ Route::get('/dashboard', [DashboardController::class, "index"])->name("dashboard
 // Kontrol barang dari Dashboard
 Route::get('/dashboard/barang', [DashboardController::class, "denied"])->name("dashboard.barang.denied");
 Route::post('/dashboard/barang', [DashboardController::class, "aksi"])->name("dashboard.barang.aksi");
+
+Route::get('/barang', [BarangController::class, "index"])->name("barang.index");
+
 
